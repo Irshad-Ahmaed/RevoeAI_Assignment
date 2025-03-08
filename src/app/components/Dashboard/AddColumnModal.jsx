@@ -16,21 +16,25 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function AddColumnModal({ onAddColumn }) {
   const [isOpen, setIsOpen] = useState(false);
   const [columnName, setColumnName] = useState('');
-  const [columnType, setColumnType] = useState('text');
+  const [columnType, setColumnType] = useState(''); // Default to empty
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [textValue, setTextValue] = useState(''); // For text input
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const column = {
       name: columnName,
       type: columnType,
-      ...(columnType === 'date' && { defaultValue: selectedDate }), // Include date if type is 'date'
+      ...(columnType === 'date' && { date: selectedDate }), // Include date if type is 'date'
+      ...(columnType === 'text' && { value: textValue }), // Include text if type is 'text'
     };
+    console.log('column', column);
     onAddColumn(column);
     setIsOpen(false);
     setColumnName('');
-    setColumnType('text');
+    setColumnType('');
     setSelectedDate(new Date());
+    setTextValue('');
   };
 
   return (
@@ -75,6 +79,23 @@ export default function AddColumnModal({ onAddColumn }) {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Render input field based on columnType */}
+              {columnType === 'text' && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="textValue" className="text-right">
+                    Default Text
+                  </Label>
+                  <Input
+                    id="textValue"
+                    value={textValue}
+                    onChange={(e) => setTextValue(e.target.value)}
+                    className="col-span-3"
+                    required
+                  />
+                </div>
+              )}
+
               {columnType === 'date' && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="datePicker" className="text-right">
@@ -86,6 +107,7 @@ export default function AddColumnModal({ onAddColumn }) {
                     className="col-span-3 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     wrapperClassName="w-full"
                     dateFormat="MMMM d, yyyy"
+                    required
                   />
                 </div>
               )}

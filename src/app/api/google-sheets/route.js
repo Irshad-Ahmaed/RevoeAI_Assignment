@@ -1,34 +1,35 @@
+import initializeSocketServer from '@/socket-server';
 import { google } from 'googleapis';
+import { NextResponse } from 'next/server';
 
-export async function GET(req) {
-  console.log('Fetching data from Google Sheets...');
+export async function GET() {
+  const auth = new google.auth.GoogleAuth({
+    credentials: JSON.parse(process.env.NEXT_GOOGLE_SERVICE_ACCOUNT_KEY),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+
+  const sheets = google.sheets({ version: 'v4', auth });
+  const spreadsheetId = process.env.NEXT_GOOGLE_SHEET_ID;
 
   try {
-    const auth = new google.auth.GoogleAuth({
-      credentials: JSON.parse(process.env.NEXT_GOOGLE_SERVICE_ACCOUNT_KEY),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
-    const sheets = google.sheets({ version: 'v4', auth });
-    const spreadsheetId = process.env.NEXT_GOOGLE_SHEET_ID;
-
-    console.log('Spreadsheet ID:', spreadsheetId);
-
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Sheet1!A:Z',
     });
 
-    console.log('Data fetched successfully:', response.data.values);
-    return new Response(JSON.stringify(response.data.values), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // Emit the new data to all connected clients
+    const io = initializeSocketServer();
+    if (io) {
+      console.log('Emitting data-update event');
+      io.emit('data-update', response.data.values);
+    }
+
+    return NextResponse.json(response.data.values);
   } catch (error) {
     console.error('Error fetching data from Google Sheets:', error);
-    return new Response(JSON.stringify({ message: 'Error fetching data from Google Sheets' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(
+      { message: 'Error fetching data from Google Sheets' },
+      { status: 500 }
+    );
   }
 }

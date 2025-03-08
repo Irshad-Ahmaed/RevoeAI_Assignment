@@ -11,11 +11,11 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  const { name, type } = await req.json();
+  const { date, value, name, type } = await req.json();
 
   const client = await clientPromise;
   const dbInstance = client.db('dashboard');
-  await dbInstance.collection('columns').insertOne({ name, type });
+  await dbInstance.collection('columns').insertOne({ date, value, name, type });
 
   return new Response(JSON.stringify({ message: 'Column added successfully' }), {
     status: 201,

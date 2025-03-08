@@ -1,3 +1,5 @@
+import formatDate from "@/app/utils/formatDate";
+
 export default function Table({ data, columns }) {
     return (
         <div className="overflow-x-auto">
@@ -6,11 +8,12 @@ export default function Table({ data, columns }) {
                     <tr>
                         {columns.map((column, index) => (
                             <th key={index} className="px-4 py-2 border">
-                                {column.name}
+                                {column.name} | {`${column.date ? formatDate(column.date) : column.value}`}
                             </th>
                         ))}
                     </tr>
                 </thead>
+                {data.length != 0 &&
                 <tbody>
                     {data.map((row, rowIndex) => (
                         <tr key={rowIndex}>
@@ -22,7 +25,11 @@ export default function Table({ data, columns }) {
                         </tr>
                     ))}
                 </tbody>
+                }
             </table>
+            {
+                data.length === 0 && <p className="text-center mt-2 font-semibold text-xl text-gray-500">No Data Available on the sheet</p>
+            }
         </div>
     );
 }
