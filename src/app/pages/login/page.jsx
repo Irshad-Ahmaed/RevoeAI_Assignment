@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/AouthContext';
 import LoginForm from '@/app/components/Auth/LoginForm';
 
 export default function Login() {

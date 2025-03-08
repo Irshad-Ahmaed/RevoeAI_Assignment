@@ -2,7 +2,7 @@
 import AddColumnModal from '@/app/components/Dashboard/AddColumnModal';
 import Table from '@/app/components/Dashboard/Table';
 import ProtectedRoute from '@/app/components/ProtectedRoute';
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/AouthContext';
 import { useData } from '@/context/DataContext';
 import axios from 'axios';
 import { useEffect, useState } from 'react';

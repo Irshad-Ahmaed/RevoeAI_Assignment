@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/AouthContext';
 import Link from 'next/link';
 
 export default function Navbar() {

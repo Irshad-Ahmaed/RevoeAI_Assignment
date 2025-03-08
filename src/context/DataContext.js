@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './authContext';
+import { useAuth } from './AouthContext';
 
 const DataContext = createContext();
 

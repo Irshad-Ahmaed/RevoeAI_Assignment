@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/authContext";
+import { AuthProvider } from "@/context/AouthContext";
 import { DataProvider } from "@/context/DataContext";
 import Navbar from "./components/Navbar";
 

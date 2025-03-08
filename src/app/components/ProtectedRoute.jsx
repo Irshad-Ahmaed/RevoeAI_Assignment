@@ -1,5 +1,5 @@
 // src/components/ProtectedRoute.js
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/AouthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
