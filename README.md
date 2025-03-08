@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dashboard with Google Sheets Integration
 
-## Getting Started
+This project is a **Next.js** application that integrates with **Google Sheets** to fetch and display data in real-time. It includes features like authentication, dynamic column addition, and real-time updates using **Server-Sent Events (SSE)**.
 
-First, run the development server:
+---
+
+## Features
+
+1. **Authentication**:
+   - Login and Signup using JWT-based authentication.
+   - Protected routes for the dashboard.
+
+2. **Google Sheets Integration**:
+   - Fetch data from a Google Sheet and display it in a table.
+   - Real-time updates when the Google Sheet is modified.
+
+3. **Dynamic Column Addition**:
+   - Add new columns dynamically to the dashboard table.
+   - Support for **Text** and **Date** column types.
+
+4. **Real-Time Updates**:
+   - Automatically reflect changes in the Google Sheet on the dashboard.
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js, Tailwind CSS, Shadcn UI
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB (for authentication)
+- **Authentication**: JWT
+- **Real-Time Updates**: Server-Sent Events (SSE)
+- **Google Sheets Integration**: Google Sheets API
+
+---
+
+## Setup Instructions
+
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2. Environment Variables
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/dashboard?retryWrites=true&w=majority
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- JWT_SECRET=your_jwt_secret_key
 
-## Learn More
+- NEXT_GOOGLE_SERVICE_ACCOUNT_KEY='{
+  "type": "service_account",
+  "project_id": "your-project-id",
+  "private_key_id": "your-private-key-id",
+  "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n",
+  "client_email": "your-service-account-email@your-project-id.iam.gserviceaccount.com",
+  "client_id": "your-client-id",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email%40your-project-id.iam.gserviceaccount.com"
+}'
 
-To learn more about Next.js, take a look at the following resources:
+- NEXT_GOOGLE_SHEET_ID=your-google-sheet-id
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Run the Application
+```bash
+    npm run dev
+```
