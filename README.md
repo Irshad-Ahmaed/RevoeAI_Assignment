@@ -39,8 +39,8 @@ This project is a **Next.js** application that integrates with **Google Sheets**
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/Irshad-Ahmaed/RevoeAI_Assignment.git
+cd revoeai_assignment
 npm install
 ```
 
