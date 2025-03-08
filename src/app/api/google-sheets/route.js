@@ -1,4 +1,3 @@
-import initializeSocketServer from '@/socket-server';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 
