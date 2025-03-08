@@ -1,71 +1,104 @@
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AddColumnModal({ onAddColumn }) {
   const [isOpen, setIsOpen] = useState(false);
   const [columnName, setColumnName] = useState('');
   const [columnType, setColumnType] = useState('text');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddColumn({ name: columnName, type: columnType });
+    const column = {
+      name: columnName,
+      type: columnType,
+      ...(columnType === 'date' && { defaultValue: selectedDate }), // Include date if type is 'date'
+    };
+    onAddColumn(column);
     setIsOpen(false);
     setColumnName('');
     setColumnType('text');
+    setSelectedDate(new Date());
   };
 
   return (
     <>
-      <button
+      <Button
         onClick={() => setIsOpen(true)}
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        className="text-white h-10 cursor-pointer rounded hover:bg-gray-800 duration-200 transition-all"
       >
         Add Column
-      </button>
-      {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Column</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Column Name</label>
-                <input
-                  type="text"
+      </Button>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Column</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="columnName" className="text-right">
+                  Column Name
+                </Label>
+                <Input
+                  id="columnName"
                   value={columnName}
                   onChange={(e) => setColumnName(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="col-span-3"
                   required
                 />
               </div>
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Column Type</label>
-                <select
-                  value={columnType}
-                  onChange={(e) => setColumnType(e.target.value)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="text">Text</option>
-                  <option value="date">Date</option>
-                </select>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="columnType" className="text-right">
+                  Column Type
+                </Label>
+                <Select value={columnType} onValueChange={setColumnType}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Text</SelectItem>
+                    <SelectItem value="date">Date</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded mr-2 hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+              {columnType === 'date' && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="datePicker" className="text-right">
+                    Default Date
+                  </Label>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    className="col-span-3 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    wrapperClassName="w-full"
+                    dateFormat="MMMM d, yyyy"
+                  />
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Add Column</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

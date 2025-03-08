@@ -3,59 +3,67 @@ import AddColumnModal from '@/app/components/Dashboard/AddColumnModal';
 import Table from '@/app/components/Dashboard/Table';
 import ProtectedRoute from '@/app/components/ProtectedRoute';
 import { useAuth } from '@/context/authContext';
+import { useData } from '@/context/DataContext';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const [data, setData] = useState([]);
+  const {data, loading, error} = useData();
   const [columns, setColumns] = useState([]);
-  
+
+  // Fetch data from Google Sheets
+
   useEffect(() => {
-    if(user){
-      fetch('/api/google-sheets')
-      .then((res) => res.json())
-      .then((data) => setData(data));
-    }
+    const fetchColumns = async () => {
+      try {
+        const res = await fetch('/api/columns');
+        if (res.ok) {
+          const data = await res.json();
+          setColumns(data);
+        } else {
+          console.error('Failed to fetch columns');
+        }
+      } catch (error) {
+        console.error('Error fetching columns:', error);
+      }
+    };
+  
+    fetchColumns();
   }, []);
+  
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-  // useEffect(() => {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const res = await axios.get('/api/auth/user', {});
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log('data', res);
-  //         // setUserDetails(data);
-  //       } else {
-  //         console.error('Failed to fetch user details');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user details:', error);
-  //     }
-  //   };
-
-  //   if (token || user) {
-  //     fetchUserDetails();
-  //   }
-  // }, [token, user]);
-
-  const handleAddColumn = (column) => {
-    setColumns([...columns, column]);
+  const handleAddColumn = async (column) => {
+    try {
+      const res = await fetch('/api/columns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(column),
+      });
+  
+      if (res.ok) {
+        setColumns([...columns, column]);
+      } else {
+        console.error('Failed to save column');
+      }
+    } catch (error) {
+      console.error('Error saving column:', error);
+    }
   };
 
   return (
     <ProtectedRoute>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+      <div className="p-6 flex flex-col gap-10">
+        <h1 className="text-3xl underline font-bold mb-6 text-gray-600">Dashboard</h1>
         <AddColumnModal onAddColumn={handleAddColumn} />
         <Table data={data} columns={columns} />
-        <button
-          onClick={logout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Logout
-        </button>
       </div>
     </ProtectedRoute>
   );

@@ -1,22 +1,34 @@
 import { google } from 'googleapis';
 
-export default async function handler(req, res) {
-  const auth = new google.auth.GoogleAuth({
-    credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY),
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  });
-
-  const sheets = google.sheets({ version: 'v4', auth });
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+export async function GET(req) {
+  console.log('Fetching data from Google Sheets...');
 
   try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: JSON.parse(process.env.NEXT_GOOGLE_SERVICE_ACCOUNT_KEY),
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+
+    const sheets = google.sheets({ version: 'v4', auth });
+    const spreadsheetId = process.env.NEXT_GOOGLE_SHEET_ID;
+
+    console.log('Spreadsheet ID:', spreadsheetId);
+
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Sheet1!A:Z',
     });
 
-    res.status(200).json(response.data.values);
+    console.log('Data fetched successfully:', response.data.values);
+    return new Response(JSON.stringify(response.data.values), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching data from Google Sheets' });
+    console.error('Error fetching data from Google Sheets:', error);
+    return new Response(JSON.stringify({ message: 'Error fetching data from Google Sheets' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
