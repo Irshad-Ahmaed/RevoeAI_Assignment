@@ -30,7 +30,7 @@ export default function Dashboard() {
     };
   
     fetchColumns();
-  }, []);
+  }, [data]);
   
   if (loading) {
     return <p>Loading...</p>;
