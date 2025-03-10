@@ -16,14 +16,7 @@ export async function GET() {
       range: 'Sheet1!A:Z',
     });
 
-    // Emit the new data to all connected clients
-    const io = initializeSocketServer();
-    if (io) {
-      console.log('Emitting data-update event');
-      io.emit('data-update', response.data.values);
-    }
-
-    return NextResponse.json(response.data.values);
+    return NextResponse.json(response.data.values || []);
   } catch (error) {
     console.error('Error fetching data from Google Sheets:', error);
     return NextResponse.json(
