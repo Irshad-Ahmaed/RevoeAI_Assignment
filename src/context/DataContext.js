@@ -69,7 +69,7 @@ export const DataProvider = ({ children }) => {
 
     // Cleanup interval on unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
   
   
 
